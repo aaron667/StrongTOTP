@@ -123,9 +123,9 @@
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Popper.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1-lts/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
     <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- jsSHA library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.1/sha.js"></script>
     <script>
@@ -133,14 +133,11 @@ let countdownInterval;
 let minuteUpdateTimeout;
 
 function generateTOTP(secret) {
-  if (!secret) {
-    return "";
-  }
+  if (!secret) return "";
 
   const epochTime = Math.floor(Date.now() / 1000);
   const timeStep = 30;
-  let counter = leftpad(Math.floor(epochTime / timeStep).toString(16), 16, '0');
-
+  const counter = leftpad(Math.floor(epochTime / timeStep).toString(16), 16, '0');
   const key = base32tohex(secret);
   const hmacObj = new jsSHA("SHA-1", "HEX");
   hmacObj.setHMACKey(key, "HEX");
@@ -150,113 +147,98 @@ function generateTOTP(secret) {
   const offset = parseInt(hmac.substring(hmac.length - 1), 16) * 2;
   let otp = (parseInt(hmac.substr(offset, 8), 16) & 0x7fffffff) % 1000000;
 
-  otp = otp.toString().padStart(6, '0');
-
-  return otp;
+  return otp.toString().padStart(6, '0');
 }
 
 function leftpad(str, len, pad) {
   while (str.length < len) {
-      str = pad + str;
-       }
-        return str;
-      }
+    str = pad + str;
+  }
+  return str;
+}
 
-      function base32tohex(base32) {
-        const base32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-        let bits = "";
-        let hex = "";
+function base32tohex(base32) {
+  const base32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+  let bits = "";
+  let hex = "";
 
-        for (let i = 0; i < base32.length; i++) {
-            const val = base32chars.indexOf(base32.charAt(i).toUpperCase());
-            bits += leftpad(val.toString(2), 5, '0');
-        }
+  for (let i = 0; i < base32.length; i++) {
+    const val = base32chars.indexOf(base32.charAt(i).toUpperCase());
+    bits += leftpad(val.toString(2), 5, '0');
+  }
 
-        for (let i = 0; i + 4 <= bits.length; i += 4) {
-            const chunk = bits.substr(i, 4);
-            hex = hex + parseInt(chunk, 2).toString(16);
-        }
+  for (let i = 0; i + 4 <= bits.length; i += 4) {
+    const chunk = bits.substr(i, 4);
+    hex += parseInt(chunk, 2).toString(16);
+  }
 
-        return hex;
-      }
+  return hex;
+}
 
-      function updateTOTP() {
-        const secret = document.getElementById("secret").value;
-        const totp = generateTOTP(secret);
+function updateTOTP() {
+  const secret = document.getElementById("secret").value;
+  const totp = generateTOTP(secret);
+  document.getElementById("totp").innerText = totp ? totp : "";
+}
 
-        if (secret) {
-          document.getElementById("totp").innerText = totp;
-        } else {
-          document.getElementById("totp").innerText = "";
-        }
-      }
+function startCountdown() {
+  const countdownElement = document.getElementById("countdown");
+  countdownElement.innerText = "Code refreshed";
+  countdownElement.style.animation = "fade 1s ease-in-out";
+  setTimeout(() => countdownElement.style.animation = "", 1000);
+}
 
-      function startCountdown() {
-        clearInterval(countdownInterval);
-        const countdownElement = document.getElementById("countdown");
-        countdownElement.innerText = "Code refreshed";
-        countdownElement.style.animation = "fade 1s ease-in-out";
-        setTimeout(() => {
-          countdownElement.style.animation = "";
-        }, 1000);
-      }
+function addCode() {
+  const secret = document.getElementById("secret").value;
+  const totp = generateTOTP(secret);
+  document.getElementById("totp").innerText = totp;
 
-      function addCode() {
-        const secret = document.getElementById("secret").value;
-        const totp = generateTOTP(secret);
-        document.getElementById("totp").innerText = totp;
+  if (!countdownInterval) {
+    startCountdown();
+    countdownInterval = setInterval(updateTOTP, 30000);
+  }
 
-        if (!countdownInterval) {
-          startCountdown();
-          countdownInterval = setInterval(updateTOTP, 30000);
-        }
+  localStorage.setItem("secret", secret);
+}
 
-        localStorage.setItem("secret", secret);
-      }
+function minuteUpdate() {
+  clearInterval(countdownInterval);
+  startCountdown();
+  updateTOTP();
+  countdownInterval = setInterval(updateTOTP, 30000);
+  const now = new Date();
+  const secondsUntilNextMinute = (60 - now.getSeconds()) * 1000;
+  minuteUpdateTimeout = setTimeout(minuteUpdate, secondsUntilNextMinute);
+}
 
-      function minuteUpdate() {
-        clearInterval(countdownInterval);
-        startCountdown();
-        updateTOTP();
-        countdownInterval = setInterval(updateTOTP, 30000);
-        const now = new Date();
-        const secondsUntilNextMinute = (60 - now.getSeconds()) * 1000;
-        minuteUpdateTimeout = setTimeout(minuteUpdate, secondsUntilNextMinute);
-      }
+function clearData() {
+  localStorage.removeItem("secret");
+  document.getElementById("secret").value = "";
+  document.getElementById("totp").innerText = "";
+}
 
-      function clearData() {
-        localStorage.removeItem("secret");
-        document.getElementById("secret").value = "";
-        document.getElementById("totp").innerText = "";
-      }
+function updateCountdown() {
+  const now = new Date();
+  const secondsUntilNextUpdate = 30 - (now.getSeconds() % 30);
+  document.getElementById("countdown").innerText = `Next update in ${secondsUntilNextUpdate} seconds`;
+}
 
-      const savedSecret = localStorage.getItem("secret");
-      if (savedSecret) {
-        document.getElementById("secret").value = savedSecret;
-      }
+const savedSecret = localStorage.getItem("secret");
+if (savedSecret) {
+  document.getElementById("secret").value = savedSecret;
+}
 
-      updateTOTP();
-      minuteUpdate();
+updateTOTP();
+minuteUpdate();
+setInterval(updateCountdown, 1000);
 
-      document.getElementById("addCodeBtn").addEventListener("click", addCode);
-      document.getElementById("clearDataBtn").addEventListener("click", clearData);
+document.getElementById("addCodeBtn").addEventListener("click", addCode);
+document.getElementById("clearDataBtn").addEventListener("click", clearData);
+</script>
+<footer class="text-center mt-3" style="font-size: 12px; color: #6c757d;">
+    Made by <a href="https://twitter.com/nagyldepotsyn" target="_blank" style="color: #6c757d;">Aaron Dat</a> | <a href="https://github.com/aaron667/StrongTOTP" target="_blank" style="color: #6c757d;">Open Source</a>
+</footer>
+</body>
+</html>
 
-      // Добавляем автоматическое обновление TOTP каждые 30 секунд
-      setInterval(updateTOTP, 30000);
 
-      // Добавляем функцию, которая обновляет таймер каждую секунду
-      function updateCountdown() {
-        const now = new Date();
-        const secondsUntilNextUpdate = 30 - (now.getSeconds() % 30); // 30 секунд между обновлениями
-        document.getElementById("countdown").innerText = `Next update in ${secondsUntilNextUpdate} seconds`;
-      }
-
-      // Вызываем функцию updateCountdown каждую секунду
-      setInterval(updateCountdown, 1000);
-
-          </script>
-      <footer class="text-center mt-3" style="font-size: 12px; color: #6c757d;">
-          Made by <a href="https://twitter.com/nagyldepotsyn" target="_blank" style="color: #6c757d;">Aaron Dat</a> | <a href="https://github.com/aaron667/StrongTOTP" target="_blank" style="color: #6c757d;">Open Source</a>
-      </footer>
-      </body>
-      </html>
