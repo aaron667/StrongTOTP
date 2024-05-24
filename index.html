@@ -184,17 +184,19 @@
     }
 
     function addCode() {
-        const secret = secretInput.value;
-        const totp = generateTOTP(secret);
-        document.getElementById("totp").innerText = totp;
+  const secret = document.getElementById("secret").value;
+  const totp = generateTOTP(secret);
+  document.getElementById("totp").innerText = totp;
 
-        if (!countdownInterval) {
-            startCountdown();
-            countdownInterval = setInterval(updateTOTP, 30000);
-        }
+  if (!countdownInterval) {
+    startCountdown();
+    countdownInterval = setInterval(updateTOTP, 30000);
+  } else {
+    updateTOTP(); // Update TOTP immediately after adding code
+  }
 
-        localStorage.setItem("secret", secret);
-    }
+  localStorage.setItem("secret", secret);
+}
 
     function minuteUpdate() {
         clearInterval(countdownInterval);
