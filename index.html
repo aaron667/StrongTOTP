@@ -183,7 +183,7 @@
         setTimeout(() => countdownElement.style.animation = "", 1000);
     }
 
-    function addCode() {
+function addCode() {
   const secret = document.getElementById("secret").value;
   const totp = generateTOTP(secret);
   document.getElementById("totp").innerText = totp;
@@ -191,12 +191,14 @@
   if (!countdownInterval) {
     startCountdown();
     countdownInterval = setInterval(updateTOTP, 30000);
-  } else {
-    updateTOTP(); // Update TOTP immediately after adding code
   }
 
   localStorage.setItem("secret", secret);
+  updateTOTP(); // Обновление TOTP сразу после добавления кода
 }
+
+document.getElementById("addCodeBtn").addEventListener("click", addCode);
+
 
     function minuteUpdate() {
         clearInterval(countdownInterval);
