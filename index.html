@@ -9,67 +9,89 @@
     <!-- Custom CSS -->
     <style>
         body {
-            background: linear-gradient(135deg, #212121, #333333);
-            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1c1c1c, #333333);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #fff;
         }
 
         .card {
-            background: #212121;
-            border-radius: 8px;
-            padding: 20px;
+            border: none;
+            background: linear-gradient(135deg, #2c2c2c, #444444);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
         .card-header {
-            background: #212121;
+            background: linear-gradient(135deg, #007bff, #0056b3);
             color: #fff;
             border-bottom: none;
         }
 
         .btn-primary {
-            background: #FF69B4;
+            background: linear-gradient(135deg, #007bff, #0056b3);
             border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
         .btn-primary:hover {
-            background: #FF69B4;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #0056b3, #004085);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1), 0 3px 5px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c82333, #bd2130);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1), 0 3px 5px rgba(0, 0, 0, 0.08);
         }
 
         .form-control {
-            background: #333333;
             border: none;
             border-radius: 4px;
-            padding: 10px;
-            font-size: 16px;
-            font-weight: regular;
+            height: calc(2.25rem + 2px);
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
             color: #fff;
+            background-color: #555;
         }
 
         .form-control:focus {
-            border-color: #FF69B4;
+            border-color: #007bff;
             outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25);
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
 
         #totp {
-            font-size: 36px;
+            font-size: 2rem;
             font-weight: bold;
             text-align: center;
-            padding: 20px;
-            background: #212121;
+            padding: 1rem;
+            background: linear-gradient(135deg, #28a745, #218838);
             border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
         #countdown {
-            font-size: 16px;
+            font-size: 1rem;
             color: #6c757d;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 1rem;
+        }
+
+        @keyframes fade {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
         }
     </style>
 </head>
