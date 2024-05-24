@@ -9,54 +9,47 @@
     <!-- Custom CSS -->
     <style>
         body {
-            background: linear-gradient(135deg, #1c1c1c, #333333);
+            background-color: #f6f8fa; /* GitHub-inspired background color */
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #fff;
+            color: #333;
         }
 
         .card {
             border: none;
-            background: linear-gradient(135deg, #2c2c2c, #444444);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background-color: #fff;
         }
 
         .card-header {
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: #fff;
-            border-bottom: none;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 10px 10px 0 0;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        .card-header h5 {
+            font-weight: bold;
+            margin-bottom: 0;
         }
 
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #0056b3, #004085);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1), 0 3px 5px rgba(0, 0, 0, 0.08);
+        .card-body {
+            padding: 1.5rem;
         }
 
-        .btn-danger {
-            background: linear-gradient(135deg, #dc3545, #c82333);
-            border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-        }
-
-        .btn-danger:hover {
-            background: linear-gradient(135deg, #c82333, #bd2130);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1), 0 3px 5px rgba(0, 0, 0, 0.08);
+        .form-group {
+            margin-bottom: 1.5rem;
         }
 
         .form-control {
-            border: none;
+            border: 1px solid #ddd;
             border-radius: 4px;
             height: calc(2.25rem + 2px);
             padding: .375rem .75rem;
             font-size: 1rem;
             line-height: 1.5;
-            color: #fff;
-            background-color: #555;
+            color: #333;
+            background-color: #fff;
         }
 
         .form-control:focus {
@@ -65,12 +58,36 @@
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
 
+        .btn {
+            border: none;
+            border-radius: 4px;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #fff;
+            background-color: #28a745;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn:hover {
+            background-color: #218838;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1), 0 3px 5px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
         #totp {
             font-size: 2rem;
             font-weight: bold;
             text-align: center;
             padding: 1rem;
-            background: linear-gradient(135deg, #28a745, #218838);
+            background-color: #f7f7f7;
             border-radius: 4px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
         }
@@ -81,27 +98,15 @@
             text-align: center;
             margin-top: 1rem;
         }
-
-        @keyframes fade {
-            0% {
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card mt-5">
+            <div class="col-md-">
+                <div class="card mt-">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">StrongTOTP</h5>
+                        <h5 class="card-title mb-">StrongTOTP</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-group">
@@ -109,8 +114,8 @@
                             <input type="text" class="form-control" id="secret" autocomplete="off">
                         </div>
                         <button type="button" class="btn btn-primary" id="addCodeBtn">Add Code</button>
-                        <button type="button" class="btn btn-danger ml-2" id="clearDataBtn">Clear Data</button>
-                        <div class="form-group mt-3">
+                        <button type="button" class="btn btn-danger ml-" id="clearDataBtn">Clear Data</button>
+                        <div class="form-group mt-">
                             <label for="totp">Your TOTP:</label>
                             <p id="totp"></p>
                         </div>
