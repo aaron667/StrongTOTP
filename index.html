@@ -9,104 +9,77 @@
     <!-- Custom CSS -->
     <style>
         body {
-            background-color: #f6f8fa; /* GitHub-inspired background color */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
+            background: linear-gradient(135deg, #212121, #333333);
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
         }
 
         .card {
-            border: none;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            background-color: #fff;
+            background: #212121;
+            border-radius: 8px;
+            padding: 20px;
         }
 
         .card-header {
-            background-color: #fff;
-            border-bottom: 1px solid #ddd;
-            padding: 1rem;
-            border-radius: 10px 10px 0 0;
+            background: #212121;
+            color: #fff;
+            border-bottom: none;
         }
 
-        .card-header h5 {
+        .btn-primary {
+            background: #FF69B4;
+            border: none;
+            border-radius: 4px;
             font-weight: bold;
-            margin-bottom: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
+        .btn-primary:hover {
+            background: #FF69B4;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .form-control {
-            border: 1px solid #ddd;
+            background: #333333;
+            border: none;
             border-radius: 4px;
-            height: calc(2.25rem + 2px);
-            padding: .375rem .75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #333;
-            background-color: #fff;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: regular;
+            color: #fff;
         }
 
         .form-control:focus {
-            border-color: #007bff;
+            border-color: #FF69B4;
             outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-
-        .btn {
-            border: none;
-            border-radius: 4px;
-            padding: .375rem .75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #fff;
-            background-color: #28a745;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-        }
-
-        .btn:hover {
-            background-color: #218838;
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1), 0 3px 5px rgba(0, 0, 0, 0.08);
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
+            box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25);
         }
 
         #totp {
-            font-size: 2rem;
+            font-size: 36px;
             font-weight: bold;
             text-align: center;
-            padding: 1rem;
-            background-color: #f7f7f7;
+            padding: 20px;
+            background: #212121;
             border-radius: 4px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         #countdown {
-            font-size: 1rem;
+            font-size: 16px;
             color: #6c757d;
             text-align: center;
-            margin-top: 1rem;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-">
-                <div class="card mt-">
+            <div class="col-md-6">
+                <div class="card mt-5">
                     <div class="card-header">
-                        <h5 class="card-title mb-">StrongTOTP</h5>
+                        <h5 class="card-title mb-0">StrongTOTP</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-group">
@@ -114,8 +87,8 @@
                             <input type="text" class="form-control" id="secret" autocomplete="off">
                         </div>
                         <button type="button" class="btn btn-primary" id="addCodeBtn">Add Code</button>
-                        <button type="button" class="btn btn-danger ml-" id="clearDataBtn">Clear Data</button>
-                        <div class="form-group mt-">
+                        <button type="button" class="btn btn-danger ml-2" id="clearDataBtn">Clear Data</button>
+                        <div class="form-group mt-3">
                             <label for="totp">Your TOTP:</label>
                             <p id="totp"></p>
                         </div>
