@@ -130,12 +130,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.1/sha.js"></script>
     <script>
         let countdownInterval;
-        // let minuteUpdateTimeout; // Removed unused variable
+        let secretKey = "";
 
         function generateTOTP(secret) {
             if (!secret) return "";
 
-            // const epochTime = Math.floor(Date.now() / 1000); // Removed unused variable
             const timeStep = 30;
             const counter = leftpad(Math.floor(Date.now() / 1000 / timeStep).toString(16), 16, '0');
             const key = base32tohex(secret);
@@ -148,7 +147,7 @@
             let otp = (parseInt(hmac.substr(offset, 8), 16) & 0x7fffffff) % 1000000;
 
             return otp.toString().padStart(6, '0');
-                    }
+        }
 
         function leftpad(str, len, pad) {
             while (str.length < len) {
@@ -159,11 +158,15 @@
 
         function base32tohex(base32) {
             const base32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-            let bits = "";
+                        let bits = "";
             let hex = "";
 
             for (let i = 0; i < base32.length; i++) {
                 const val = base32chars.indexOf(base32.charAt(i).toUpperCase());
+                if (val === -1) {
+                    // Handle invalid characters
+                    return "";
+                }
                 bits += leftpad(val.toString(2), 5, '0');
             }
 
@@ -177,6 +180,11 @@
 
         function updateTOTP() {
             const secret = document.getElementById("secret").value;
+            if (secret !== secretKey) {
+                // Handle invalid secret key
+                document.getElementById("totp").innerText = "Invalid Secret Key";
+                return;
+            }
             const totp = generateTOTP(secret);
             document.getElementById("totp").innerText = totp ? totp : "";
         }
@@ -190,6 +198,11 @@
 
         function addCode() {
             const secret = document.getElementById("secret").value;
+            if (secret !== secretKey) {
+                // Handle invalid secret key
+                document.getElementById("totp").innerText = "Invalid Secret Key";
+                return;
+            }
             const totp = generateTOTP(secret);
             document.getElementById("totp").innerText = totp;
 
@@ -197,39 +210,36 @@
                 startCountdown();
                 countdownInterval = setInterval(updateTOTP, 30000);
             }
-
-            localStorage.setItem("secret", secret);
-        }
-
-        function minuteUpdate() {
-            clearInterval(countdownInterval);
-            startCountdown();
-            updateTOTP();
-            countdownInterval = setInterval(updateTOTP, 30000);
-            const now = new Date();
-            const secondsUntilNextMinute = (60 - now.getSeconds()) * 1000;
-            // minuteUpdateTimeout = setTimeout(minuteUpdate, secondsUntilNextMinute); // Removed unused variable
         }
 
         function clearData() {
             localStorage.removeItem("secret");
             document.getElementById("secret").value = "";
             document.getElementById("totp").innerText = "";
+            clearInterval(countdownInterval);
+            countdownInterval = null;
         }
 
         function updateCountdown() {
             const now = new Date();
-            const secondsUntilNextUpdate = 30 - (now.getSeconds() % 30);
-            document.getElementById("countdown").innerText = `Next update in ${secondsUntilNextUpdate} seconds`;
+            const secondsUntilNextUpdate = 30 - now.getSeconds() % 30;
+            if (secondsUntilNextUpdate === 0) {
+                // Handle case when seconds until next update is 0
+                document.getElementById("countdown").innerText = "Next update in less than a second";
+            } else {
+                document.getElementById("countdown").innerText = `Next update in ${secondsUntilNextUpdate} seconds`;
+            }
         }
 
         const savedSecret = localStorage.getItem("secret");
         if (savedSecret) {
+            secretKey = savedSecret;
             document.getElementById("secret").value = savedSecret;
+            updateTOTP();
+            startCountdown();
+            countdownInterval = setInterval(updateTOTP, 30000);
         }
 
-        updateTOTP();
-        minuteUpdate();
         setInterval(updateCountdown, 1000);
 
         document.getElementById("addCodeBtn").addEventListener("click", addCode);
