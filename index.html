@@ -134,20 +134,25 @@ let minuteUpdateTimeout;
 
 function generateTOTP(secret) {
   if (!secret) return "";
+  
+  try {
+    const epochTime = Math.floor(Date.now() / 1000);
+    const timeStep = 30;
+    const counter = leftpad(Math.floor(epochTime / timeStep).toString(16), 16, '0');
+    const key = base32tohex(secret);
+    const hmacObj = new jsSHA("SHA-1", "HEX");
+    hmacObj.setHMACKey(key, "HEX");
+    hmacObj.update(counter);
 
-  const epochTime = Math.floor(Date.now() / 1000);
-  const timeStep = 30;
-  const counter = leftpad(Math.floor(epochTime / timeStep).toString(16), 16, '0');
-  const key = base32tohex(secret);
-  const hmacObj = new jsSHA("SHA-1", "HEX");
-  hmacObj.setHMACKey(key, "HEX");
-  hmacObj.update(counter);
+    const hmac = hmacObj.getHMAC("HEX");
+    const offset = parseInt(hmac.substring(hmac.length - 1), 16) * 2;
+    let otp = (parseInt(hmac.substr(offset, 8), 16) & 0x7fffffff) % 1000000;
 
-  const hmac = hmacObj.getHMAC("HEX");
-  const offset = parseInt(hmac.substring(hmac.length - 1), 16) * 2;
-  let otp = (parseInt(hmac.substr(offset, 8), 16) & 0x7fffffff) % 1000000;
-
-  return otp.toString().padStart(6, '0');
+    return otp.toString().padStart(6, '0');
+  } catch (error) {
+    console.error("Error generating TOTP:", error.message);
+    return "";
+  }
 }
 
 function leftpad(str, len, pad) {
